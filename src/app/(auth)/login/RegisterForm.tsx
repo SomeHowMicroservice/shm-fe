@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { CiLock, CiUser, CiMail } from "react-icons/ci";
 import { useForm } from "react-hook-form";
-import { register as registerApi } from "@/services/auth";
+import { register as registerApi } from "@/apis/auth";
 import Input from "@/components/ui/Input";
 import { toast } from "react-toastify";
 import OTPForm from "./OTPForm";

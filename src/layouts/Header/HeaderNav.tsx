@@ -2,62 +2,77 @@
 
 import React from "react";
 import { MdOutlineMenu } from "react-icons/md";
-import Input from "@/components/ui/Input";
-import { FaRegUser } from "react-icons/fa";
-import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
-import { useRouter } from "next/navigation";
-import { getCookie } from "@/utils/cookies";
+import { FaRegUser } from "react-icons/fa";
+import { AiOutlineHeart } from "react-icons/ai";
+import { BsBag } from "react-icons/bs";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import Input from "@/components/ui/Input";
 
 export default function Header() {
   const router = useRouter();
-  const token = getCookie("g_state");
+  const pathName = usePathname();
 
   const handleProfile = () => {
-    router.push("/profile");
-    console.log(token);
+    router.push("/profile/my-account");
   };
 
+  const isHome = pathName === "/";
+
   return (
-    <header className="w-full bg-white px-4 py-4">
-      <div className="flex items-center justify-between max-w-8xl mx-auto">
-        <div className="flex items-center gap-16">
-          <button className="text-white hover:text-gray-200 transition-colors">
-            <MdOutlineMenu size={22} className="text-black" />
+    <header className="w-full bg-white px-6 py-4 text-black sticky">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <button>
+            <MdOutlineMenu size={28} />
           </button>
 
-          <Image
-            src={"/images/logo.png"}
-            alt="Logo"
-            width={220}
-            height={220}
-            className="text-black font-bold text-xl tracking-wide"
-          />
+          <div className="flex items-center border-b border-black">
+            <CiSearch size={18} className="mr-2" />
+            <Input
+              type="text"
+              placeholder="SEARCH..."
+              className="bg-transparent text-sm focus:outline-none border-none"
+            />
+          </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 max-w-md mx-8">
-            <div className="relative">
-              <Input
-                type="text"
-                icon={<CiSearch className="text-black" />}
-                placeholder="Search..."
-                className="w-full px-4 py-1 pl-10 text-black backdrop-blur-sm border border-black rounded-md bg-white placeholder-black placeholder:text-sm"
-              />
-            </div>
-          </div>
+        <Image
+          src="/images/logo.png"
+          alt="SOMEHOW Logo"
+          width={200}
+          height={150}
+          className="object-cover"
+        />
 
-          <div className="flex items-center space-x-2">
-            <button
-              className="flex items-center space-x-2 text-black hover:text-gray-200 cursor-pointer transition-colors"
-              onClick={handleProfile}
-            >
-              <FaRegUser size={18} />
-            </button>
-            <span className="font-medium text-black">GIO (2)</span>
-          </div>
+        <div className="flex items-center gap-6 ">
+          <button onClick={handleProfile}>
+            <FaRegUser
+              size={18}
+              className="hover:text-gray-300 transition cursor-pointer"
+            />
+          </button>
+          <button>
+            <AiOutlineHeart
+              size={20}
+              className="hover:text-gray-300 transition cursor-pointer"
+            />
+          </button>
+          <button>
+            <BsBag
+              size={20}
+              className="hover:text-gray-300 transition cursor-pointer"
+            />
+          </button>
         </div>
       </div>
+      {isHome && (
+        <div className="flex gap-4  text-sm font-light tracking-wide mt-4">
+          <button className="hover:text-gray-300 transition">NAM</button>
+          <button className="hover:text-gray-300 transition">NỮ</button>
+        </div>
+      )}
     </header>
   );
 }

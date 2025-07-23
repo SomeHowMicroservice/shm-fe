@@ -8,7 +8,7 @@ import qs from "qs";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/token";
 import { getCookie } from "@/utils/cookies";
 import { useAppStore } from "@/stores/useAppStore";
-import { getRefreshToken, setTokenServer } from "@/services/auth";
+import { getRefreshToken, setTokenServer } from "@/apis/auth";
 
 type IRequestCb = (token: string) => void;
 

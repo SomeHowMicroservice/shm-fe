@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import Input from "@/components/ui/Input";
-import { verifyOtp } from "@/services/auth";
+import { verifyOtp } from "@/apis/auth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

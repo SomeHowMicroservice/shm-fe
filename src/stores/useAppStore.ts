@@ -3,12 +3,11 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 interface Profile {
-  _id: string;
-  email: string;
-  phone: string;
-  status: string;
-  firstName: string;
-  lastName: string;
+  id: string;
+  gender: string;
+  first_name: string;
+  last_name: string;
+  dob: string;
 }
 
 interface AppState {
@@ -18,12 +17,11 @@ interface AppState {
 }
 
 const initialProfileState: Profile = {
-  _id: "",
-  email: "",
-  phone: "",
-  status: "",
-  firstName: "",
-  lastName: "",
+  id: "",
+  gender: "",
+  first_name: "",
+  last_name: "",
+  dob: "",
 };
 
 const initialState: AppState = {
