@@ -7,18 +7,18 @@ import { FaRegUser } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BsBag } from "react-icons/bs";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Input from "@/components/ui/Input";
+import Link from "next/link";
+import { useAppStore } from "@/stores/useAppStore";
 
 export default function Header() {
-  const router = useRouter();
   const pathName = usePathname();
 
-  const handleProfile = () => {
-    router.push("/profile/my-account");
-  };
-
   const isHome = pathName === "/";
+  const { profile } = useAppStore();
+
+  const isAuthenticated = !!profile.id;
 
   return (
     <header className="w-full bg-white px-6 py-4 text-black sticky">
@@ -47,24 +47,24 @@ export default function Header() {
         />
 
         <div className="flex items-center gap-6 ">
-          <button onClick={handleProfile}>
+          <Link href={isAuthenticated ? "/profile/my-account" : "/login"}>
             <FaRegUser
               size={18}
               className="hover:text-gray-300 transition cursor-pointer"
             />
-          </button>
-          <button>
+          </Link>
+          <Link href="/wishlist">
             <AiOutlineHeart
               size={20}
               className="hover:text-gray-300 transition cursor-pointer"
             />
-          </button>
-          <button>
+          </Link>
+          <Link href="/cart">
             <BsBag
               size={20}
               className="hover:text-gray-300 transition cursor-pointer"
             />
-          </button>
+          </Link>
         </div>
       </div>
       {isHome && (

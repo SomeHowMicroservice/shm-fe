@@ -18,7 +18,7 @@ export default function AuthLayout({
         <Breadcrumb />
         <div className="flex justify-between bg-white w-full h-screen px-20">
           {children}
-          <div className="w-1/2 h-[300px] relative hidden lg:block min-h-4/5">
+          <div className="lg:w-1/2 h-[300px] relative hidden lg:block min-h-2/3">
             <Image
               src="/images/authImage.png"
               alt="Auth Banner"

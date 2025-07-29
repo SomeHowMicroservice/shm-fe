@@ -1,5 +1,6 @@
 import axiosRequest from "@/config/axios";
 import axios from "axios";
+import { useAppStore } from "@/stores/useAppStore";
 
 export const login = (data: { username: string; password: string }) => {
   return axiosRequest.post("/auth/sign-in", data);
@@ -53,6 +54,19 @@ export const deleteTokenServer = async () => {
     return res;
   } catch (error) {
     console.log("errors", error);
+    throw error;
+  }
+};
+
+export const logOut = async () => {
+  try {
+    const res = await axiosRequest.post("/auth/sign-out");
+    useAppStore.getState().clearProfile();
+    deleteTokenServer();
+    return res;
+  } catch (error) {
+    console.log("errors", error);
+    throw error;
   }
 };
 
@@ -77,6 +91,7 @@ const authAPI = {
   getRefreshToken,
   deleteTokenServer,
   verifyOtp,
+  logOut,
 };
 
 export default authAPI;

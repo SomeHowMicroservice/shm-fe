@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 interface Profile {
@@ -31,20 +30,17 @@ const initialState: AppState = {
 };
 
 export const useAppStore = create<AppState>()(
-  persist(
-    immer((set) => ({
-      ...initialState,
-      setProfile: (profile: Profile) => {
-        set((state) => {
-          state.profile = profile;
-        });
-      },
-      clearProfile: () => {
-        set((state) => {
-          state.profile = initialProfileState;
-        });
-      },
-    })),
-    { name: "app" }
-  )
+  immer((set) => ({
+    ...initialState,
+    setProfile: (profile: Profile) => {
+      set((state) => {
+        state.profile = profile;
+      });
+    },
+    clearProfile: () => {
+      set((state) => {
+        state.profile = initialProfileState;
+      });
+    },
+  }))
 );

@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { CiLock, CiUser, CiMail } from "react-icons/ci";
 import { useForm } from "react-hook-form";
 import { register as registerApi } from "@/apis/auth";
 import Input from "@/components/ui/Input";
 import { toast } from "react-toastify";
-import OTPForm from "./OTPForm";
-import LoginForm from "./LoginForm";
 import Link from "next/link";
+import { useAuthStore } from "@/stores/useAuthStore";
+import Spin from "@/components/ui/Spin";
+import OTPForm from "./OTPForm";
 
 type FormValues = {
   username: string;
@@ -18,11 +19,10 @@ type FormValues = {
 };
 
 const RegisterForm = () => {
-  const [showOtpForm, setShowOtpForm] = useState(false);
-  const [showLoginForm, setShowLoginForm] = useState<boolean>(false);
+  const authActions = useAuthStore();
 
-  const [sentToEmail, setSentToEmail] = useState("");
-  const [verifyToken, setVerifyToken] = useState<string>("");
+  const [showOtpForm, setShowOtpForm] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -40,10 +40,11 @@ const RegisterForm = () => {
         password: data.password,
       });
 
+      authActions.setNewEmail({ email: data.email });
+      authActions.setNewToken({
+        registration_token: res.data.data.registration_token,
+      });
       toast.success("Mã OTP đã được gửi về mail của bạn");
-
-      setSentToEmail(data.email);
-      setVerifyToken(res.data.registration_token);
       setShowOtpForm(true);
     } catch (error: unknown) {
       toast.error(
@@ -55,22 +56,16 @@ const RegisterForm = () => {
   };
 
   if (showOtpForm) {
-    return (
-      <OTPForm
-        token={verifyToken}
-        email={sentToEmail}
-        onSuccess={() => setShowLoginForm(true)}
-      />
-    );
-  }
-
-  if (showLoginForm) {
-    return <LoginForm />;
+    return <OTPForm />;
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="flex items-center border-b">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="lg:w-1/2 w-full lg:max-w-md space-y-4"
+    >
+      <h2 className="text-xl text-black font-bold mb-2">ĐĂNG KÝ</h2>
+      <div className="flex items-center border px-3 py-1 rounded bg-[#ebebeb]">
         <CiUser className="mr-2 text-[#757575]" size={20} />
         <Input
           type="text"
@@ -89,12 +84,12 @@ const RegisterForm = () => {
         <p className="text-red-500 text-xs px-2">{errors.username.message}</p>
       )}
 
-      <div className="flex items-center border-b">
+      <div className="flex items-center border px-3 py-1 rounded bg-[#ebebeb]">
         <CiMail className="text-[#757575] mr-2" size={20} />
         <Input
           type="email"
           placeholder="Email"
-          className="flex-1 outline-none py-2 text-[#757575] placeholder:text-[#757575] placeholder:text-sm border-none"
+          className="flex-1 outline-none py-2 text-[#757575] placeholder:text-[#757575] placeholder:text-sm border-none bg-[#ebebeb]"
           {...register("email", {
             required: "Email không được để trống",
             pattern: {
@@ -108,12 +103,12 @@ const RegisterForm = () => {
         <p className="text-red-500 text-xs px-2">{errors.email.message}</p>
       )}
 
-      <div className="flex items-center border-b">
+      <div className="flex items-center border px-3 py-1 rounded bg-[#ebebeb]">
         <CiLock className="text-[#757575] mr-2" size={20} />
         <Input
           type="password"
           placeholder="Mật khẩu"
-          className="flex-1 outline-none py-2 text-[#757575] placeholder:text-[#757575] placeholder:text-sm border-none"
+          className="flex-1 outline-none py-2 text-[#757575] placeholder:text-[#757575] placeholder:text-sm border-none bg-[#ebebeb]"
           {...register("password", {
             required: "Mật khẩu không được để trống",
             minLength: {
@@ -127,12 +122,12 @@ const RegisterForm = () => {
         <p className="text-red-500 text-xs px-2">{errors.password.message}</p>
       )}
 
-      <div className="flex items-center border-b">
+      <div className="flex items-center rounded border px-3 py-1 bg-[#ebebeb]">
         <CiLock className="text-[#757575] mr-2" size={20} />
         <Input
           type="password"
           placeholder="Xác nhận mật khẩu"
-          className="flex-1 outline-none py-2 text-[#757575] placeholder:text-[#757575] placeholder:text-sm border-none focus:none"
+          className="flex-1 outline-none py-2 text-[#757575] placeholder:text-[#757575] placeholder:text-sm border-none focus:none bg-[#ebebeb]"
           {...register("confirmPassword", {
             required: "Xác nhận mật khẩu không được để trống",
             validate: (value) =>
@@ -145,6 +140,16 @@ const RegisterForm = () => {
           {errors.confirmPassword.message}
         </p>
       )}
+
+      <div className="text-xs text-center pt-2 text-[#757575]">
+        Đã có tài khoản?{" "}
+        <Link
+          className="underline hover:text-black hover:font-medium"
+          href={"/login"}
+        >
+          Đăng nhập ngay
+        </Link>
+      </div>
 
       <div className="text-[#757575] text-xs px-2 text-center">
         Bằng cách nhấp vào “Đăng ký”, bạn đã đồng ý với{" "}
@@ -167,8 +172,9 @@ const RegisterForm = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-black text-white py-3 mt-4 hover:bg-gray-800 cursor-pointer transition-colors duration-200 disabled:opacity-50"
+        className="w-full bg-black text-white py-3 font-semibold hover:bg-gray-800 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
+        {isSubmitting && <Spin size={20} color="#fff" />}
         {isSubmitting ? "Đang xử lý..." : "ĐĂNG KÝ"}
       </button>
     </form>

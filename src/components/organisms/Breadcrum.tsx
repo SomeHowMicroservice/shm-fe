@@ -16,8 +16,11 @@ const Breadcrumb = () => {
     orders: "Đơn hàng",
     address: "Danh sách địa chỉ",
     login: "Đăng nhập",
-    "sign-up": "Đăng ký",
+    register: "Đăng ký",
     discount: "Mã giảm giá",
+    otp: "Xác thực OTP",
+    "forgot-password": "Quên mật khẩu",
+    "reset-password": "Đặt lại mật khẩu",
   };
 
   const fullPath: { href: string; label: string }[] = [];

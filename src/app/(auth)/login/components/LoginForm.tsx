@@ -3,12 +3,12 @@
 import { useForm } from "react-hook-form";
 import { CiLock, CiUser } from "react-icons/ci";
 import Input from "@/components/ui/Input";
-import { login } from "@/apis/auth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import Spin from "@/components/ui/Spin";
+import { loginUser } from "@/services/auth";
 
 type LoginFormData = {
   username: string;
@@ -33,11 +33,11 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
     try {
-      const res = await login(data);
+      const res = await loginUser(data);
       toast.success(res.data.message);
       setTimeout(() => {
         router.push("/");
-      }, 2000);
+      }, 1000);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -52,7 +52,7 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-md space-y-4"
+      className="lg:w-1/2 w-full lg:max-w-md space-y-4"
     >
       <h2 className="text-xl text-black font-bold mb-2">ĐĂNG NHẬP</h2>
       <p className="text-sm text-gray-600 mb-4">
@@ -60,12 +60,12 @@ const LoginForm = () => {
       </p>
 
       <div className="flex flex-col gap-1">
-        <div className="flex items-center border rounded px-3 py-2">
+        <div className="flex items-center border rounded px-3 py-1 bg-[#ebebeb]">
           <CiUser className="mr-2 text-[#757575]" size={20} />
           <Input
             type="text"
-            placeholder="Username"
-            className="flex-1 outline-none border-none text-sm text-[#757575] placeholder:text-[#757575]"
+            placeholder="Tên đăng nhập"
+            className="flex-1 outline-none border-none text-sm text-[#757575] placeholder:text-[#757575] bg-[#ebebeb]"
             {...register("username", {
               required: "Số điện thoại không được để trống",
               minLength: {
@@ -83,7 +83,7 @@ const LoginForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <div className="flex items-center border rounded px-3 py-2">
+        <div className="flex items-center border rounded px-3 py-1 bg-[#ebebeb]">
           <CiLock className="mr-2 text-[#757575]" size={20} />
           <Input
             type="password"

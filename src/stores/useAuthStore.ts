@@ -1,36 +1,35 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 interface IAuth {
-  token: string;
-  refreshToken: string;
+  email: string;
+  registration_token: string;
 }
 
 const initialState: IAuth = {
-  token: "",
-  refreshToken: "",
+  email: "",
+  registration_token: "",
 };
 
 interface IAuthAction {
-  setNewToken: (auth: Omit<IAuth, "userInfo">) => void;
+  setNewToken: (registratiom_token: Omit<IAuth, "email">) => void;
+  setNewEmail: (email: Omit<IAuth, "registration_token">) => void;
   logoutUser: () => void;
 }
 
 export const useAuthStore = create<IAuth & IAuthAction>()(
-  persist(
-    immer((set) => ({
-      ...initialState,
-      setNewToken: ({ token, refreshToken }) => {
-        set((state) => {
-          state.token = token;
-          state.refreshToken = refreshToken;
-        });
-      },
-      logoutUser: () => set(() => initialState),
-    })),
-    {
-      name: "auth",
-    }
-  )
+  immer((set) => ({
+    ...initialState,
+    setNewToken: ({ registration_token }) => {
+      set((state) => {
+        state.registration_token = registration_token;
+      });
+    },
+    setNewEmail: ({ email }) => {
+      set((state) => {
+        state.email = email;
+      });
+    },
+    logoutUser: () => set(() => initialState),
+  }))
 );

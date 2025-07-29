@@ -5,6 +5,9 @@ import { cn } from "@/config/utils";
 import { useEffect } from "react";
 import { fetchProfile, fetchUserMeasurements } from "@/services/user";
 import { useAppStore } from "@/stores/useAppStore";
+import { CiLogout } from "react-icons/ci";
+import { logOut } from "@/apis/auth";
+import { toast } from "react-toastify";
 
 const sidebarItems = [
   { label: "Thông tin tài khoản", path: "/profile/my-account" },
@@ -14,6 +17,12 @@ const sidebarItems = [
   { label: "Danh sách yêu thích", path: "/profile/favorites" },
   { label: "Lịch sử mua hàng", path: "/profile/history" },
   { label: "Thay đổi mật khẩu", path: "/profile/change-password" },
+  {
+    label: "Đăng xuất",
+    path: "#",
+    icon: <CiLogout className="w-4 h-4 ml-2 rotate-180" />,
+    action: "logout",
+  },
 ];
 
 export default function ProfileSidebar() {
@@ -39,6 +48,20 @@ export default function ProfileSidebar() {
     }
   };
 
+  const handleLogout = async () => {
+    await logOut();
+    toast.success("Đăng xuất thành công");
+    router.push("/");
+  };
+
+  const handleItemClick = (item: (typeof sidebarItems)[number]) => {
+    if (item.action === "logout") {
+      handleLogout();
+    } else {
+      router.push(item.path);
+    }
+  };
+
   useEffect(() => {
     fetchProfileData();
     fetchMeasurementsData();
@@ -56,16 +79,17 @@ export default function ProfileSidebar() {
       <ul className="space-y-8 text-sm font-medium">
         {sidebarItems.map((item) => (
           <li
-            key={item.path}
-            onClick={() => router.push(item.path)}
+            key={item.label}
+            onClick={() => handleItemClick(item)}
             className={cn(
-              "cursor-pointer hover:text-yellow-500 border-l-2 pl-1",
+              "cursor-pointer hover:text-yellow-500 border-l-2 pl-1 flex items-center",
               pathname === item.path
                 ? "text-yellow-500 border-yellow-500 font-medium"
                 : "text-black border-transparent"
             )}
           >
             {item.label}
+            {item.icon && item.icon}
           </li>
         ))}
       </ul>
